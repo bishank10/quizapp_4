@@ -18,8 +18,8 @@ var quiz = [
 var currentQuestionIndex = 0;
 var time = quiz.length * 15;
 var timerId;
-var initial;
-var score;
+var initials;
+var score = 0;
 
 
 // var paragraphEl = document.getElementById("question");
@@ -31,6 +31,8 @@ var answersEl = document.getElementById("answers");
 var timerEl = document.getElementById("timer");
 var feedbackEl = document.getElementById("feedback");
 var initialEl = document.getElementById("endGame");
+var reStartEl = document.getElementById("restart");
+
 
 
 
@@ -38,35 +40,25 @@ var initialEl = document.getElementById("endGame");
 function startGame() {
     timerId = setInterval(clockTick, 1000);
     timerEl.textContent = time;
-    getQuestions()
+    getQuestions();
 
-    //  for(i =0; i<1; i++) {
-    // question.innerText= quiz[i].question;
-    // quizEl.appendChild(question.innerText);
-    // document.createElement("button").innerText= quiz[i].a;
-    // document.createElement("button").innerText= quiz[i].b;
-    // quizEl.append(qna);
-
-
-
-
-
-    //  }
 }
+
+// the function here starts the timer
 function clockTick() {
     time--;
     timerEl.textContent = time;
     if (time <= 0) {
-        endGame()
+        time === 0;
     }
 }
-
+// the function here presents the user with series of question
 function getQuestions() {
     var currentQuestion = quiz[currentQuestionIndex];
     quizEl.textContent = currentQuestion.question;
     answersEl.innerHTML = "";
     currentQuestion.choices.forEach(function(choice){
-        var choiceBtn = document.createElement("button");
+        choiceBtn = document.createElement("button");
         choiceBtn.setAttribute("class","button");
         choiceBtn.setAttribute("value",choice);
         choiceBtn.textContent = choice;
@@ -76,11 +68,15 @@ function getQuestions() {
     })
 
 }
-function questionClick(){
+
+// the function here decides the action when the answer is selected
+function questionClick() {
     if (this.value !== quiz[currentQuestionIndex].answer){
-        time = time-15;
-        if ( time < 0) {
-            time = 0;
+            time = time-15; 
+            if ( time < 0) {
+            // time = 0;
+            endGame();
+
         }
         timerEl.textContent = time;
         // play incorrect sound effect
@@ -88,9 +84,10 @@ function questionClick(){
     } else {
         // play correct sound effect
         feedbackEl.textContent = "Great Job";
-        score++
+        score++;
     }
     currentQuestionIndex++;
+
     if ( currentQuestionIndex === quiz.length) {
         endGame();
     } else {
@@ -98,36 +95,39 @@ function questionClick(){
     }
 }
 
-// function endGame(){
-//     inputLabel = initialEl.createElement("input");
-//     inputLabel.setAttribute("placeholder","initials please");
-//      initialEl.appendChild(inputLabel); 
-//      initial = inputLabel.value;
-//     initialValue = 
+// this function is executed when the game is over
+function endGame () {
+    // time = quiz.length * 15;
+    console.log ("game over")
+    alert ("gameOver");
+    inputLabel = document.createElement ("input");
+    inputLabel.setAttribute ("placeholder","initials please");
+    initialEl.appendChild (inputLabel); 
+    inputLabel.text = initials;
+    saveBtn = document.createElement ("button");
+    saveBtn.textContent = "save";
+    initialEl.appendChild (saveBtn);
+    localStorage.setItem ("initial", initials);
+    localStorage.setItem ("score", score);
+    score = localStorage.getItem ("score");
+    saveBtn.addEventListener ("click", function() {
+    if (initials!== null) {
+        alert("your score is : " + score); 
+        };
+    
+    });
+
+    reStart = document.createElement ("button");
+    reStart.textContent = "restart";
+    reStartEl.appendChild (reStart);
 
 
+   
+}
 
-// WHEN the game is over
-// THEN I can save my initials and score
 
-
-// PCODE
-
-// Create start button
-// Add listener (or onClick or .click) on button
-// Button triggers startQuiz function
-// StatQuiz function starts timer and loads questions
-// ^^^ also need timer function and question function
-
-// Timer function should remove time ever 1000ms
-// When time reaches 0 trigger endGame function 
-
-// question function 
-// declare current question 
-// inject question on page
-// create buttons for each choice
-// on click on button check to see if correct
 
 // Question click function
 
 document.getElementById("button").addEventListener("click", startGame);
+document.getElementById("restart").addEventListener("click", startGame);
